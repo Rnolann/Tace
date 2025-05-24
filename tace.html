@@ -1,0 +1,481 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Tace — Écris pour toi</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    /* ======= Reset & Base ======= */
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen,
+    Ubuntu, Cantarell, "Inter", "Open Sans", "Helvetica Neue", sans-serif;
+  background-color: #f5f5f7; /* Gris très clair Apple style */
+  color: #1d1d1f; /* Gris foncé élégant */
+  padding: 20px;
+  line-height: 1.6;
+}
+
+/* Container centré et limité en largeur */
+.container {
+  max-width: 700px;
+  margin: 0 auto;
+  padding: 0 1rem;
+}
+
+/* ======= Titres ======= */
+h1 {
+  font-size: 2.5rem;
+  text-align: center;
+  margin-bottom: 0.5rem;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  color: #1d1d1f;
+}
+
+/* Sous-titres */
+p.subtitle {
+  text-align: center;
+  color: #8b8b8b;
+  margin-bottom: 2rem;
+  font-weight: 300;
+}
+
+/* ======= Textarea ======= */
+textarea {
+  width: 100%;
+  padding: 1rem;
+  border: none;
+  border-radius: 12px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+  resize: vertical;
+  font-size: 1rem;
+  font-family: 'Inter', sans-serif;
+  transition: box-shadow 0.3s ease, background-color 0.3s ease;
+  background-color: #f9f9f9;
+  color: #333;
+  box-sizing: border-box;
+}
+
+/* Focus sur textarea */
+textarea:focus {
+  outline: none;
+  box-shadow: 0 0 0 2px #4a90e2; /* Bleu doux Apple */
+  background-color: #fff;
+  border-radius: 12px;
+}
+
+/* Spécifique à textarea avec ID textInput */
+textarea#textInput {
+  min-height: 150px;
+  border: 2px solid #ccc;
+}
+
+textarea#textInput:focus {
+  border-color: #4a90e2;
+  box-shadow: 0 0 8px rgba(74, 144, 226, 0.5);
+  background-color: #fff;
+}
+
+/* ======= Fichier input caché et label stylé ======= */
+.file-input {
+  display: none;
+}
+
+.file-label {
+  display: inline-block;
+  background: #d0a67b;
+  color: white;
+  font-size: 1.5rem;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  text-align: center;
+  line-height: 40px;
+  cursor: pointer;
+  transition: background 0.3s ease;
+  margin-top: 1rem;
+  flex-shrink: 0;
+}
+
+.file-label:hover {
+  background: #bb936c;
+}
+
+/* ======= Boutons ======= */
+.button {
+  background: #d0a67b;
+  color: white;
+  border: none;
+  border-radius: 12px;
+  padding: 0.8rem 1.5rem;
+  font-size: 1rem;
+  margin-top: 1rem;
+  cursor: pointer;
+  transition: background 0.3s ease, box-shadow 0.3s ease;
+  width: 100%;
+  flex: 1;
+  font-weight: 600;
+}
+
+.button:hover,
+.button:focus {
+  background: #bb936c;
+  box-shadow: 0 0 8px rgba(208, 166, 123, 0.6);
+  outline: none;
+}
+
+/* ======= Entrées (cards) ======= */
+.entry,
+.entry-card {
+  background: white;
+  padding: 1.5rem;
+  border-radius: 16px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
+  margin-bottom: 2rem;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  word-break: break-word;
+}
+
+.entry:hover,
+.entry-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.1);
+}
+
+.entry img {
+  max-width: 100%;
+  border-radius: 10px;
+  margin-bottom: 0.5rem;
+  display: block;
+}
+
+/* Spécifique à entry-card textarea */
+.entry-card textarea {
+  border: 1px solid #ddd;
+  box-shadow: none;
+  margin-bottom: 1rem;
+  border-radius: 12px;
+}
+
+/* ======= Timestamp ======= */
+.timestamp {
+  font-size: 0.8rem;
+  color: #999;
+  margin-top: 0.5rem;
+}
+
+/* ======= Boutons d'action ======= */
+.delete-button,
+.download-button {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 0.9rem;
+  text-decoration: underline;
+  margin-top: 0.5rem;
+  padding: 0;
+  font-family: inherit;
+  transition: color 0.3s ease;
+}
+
+.delete-button {
+  color: #d9534f;
+}
+
+.delete-button:hover,
+.delete-button:focus {
+  color: #c9302c;
+  outline: none;
+}
+
+.download-button {
+  color: #31708f;
+  margin-left: 1rem;
+}
+
+.download-button:hover,
+.download-button:focus {
+  color: #23527c;
+  outline: none;
+}
+
+/* ======= Ligne d'action ======= */
+.action-row {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-top: 1rem;
+}
+
+/* ======= Animations douces ======= */
+.fade-in {
+  opacity: 0;
+  animation: fadeInAnimation 1s ease forwards;
+}
+
+@keyframes fadeInAnimation {
+  to {
+    opacity: 1;
+  }
+}
+
+
+  </style>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js" defer></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js" defer></script>
+  <link rel="manifest" href="manifest.json" />
+<meta name="theme-color" content="#4a90e2" />
+
+</head>
+<body>
+  <div class="container">
+    <h1>Tace</h1>
+    <p class="subtitle">Écris pour toi. Capture l’instant. Vis le moment présent.</p>
+
+    <div class="entry-card" role="region" aria-label="Nouvelle entrée">
+      <textarea id="text-entry" placeholder="Écris ton souvenir ici..." rows="5" aria-label="Zone de texte pour écrire un souvenir"></textarea>
+    
+
+      <div class="action-row">
+        <input class="file-input" type="file" id="photo-input" accept="image/*" aria-label="Ajouter une photo">
+        <label for="photo-input" class="file-label" title="Ajouter une photo">+</label>
+        <button class="button" type="button" onclick="saveEntry()" aria-label="Sauvegarder le moment">Publier le moment</button>
+        <button class="button" type="button" onclick="exportAllToPDF()" aria-label="Exporter tous les souvenirs">Exporter tous les souvenirs</button>
+      </div>
+    </div>
+
+    <div id="entries" aria-live="polite" aria-relevant="additions"></div>
+  </div>
+
+  <script>
+    "use strict";
+
+    const textEntry = document.getElementById('text-entry');
+    const photoInput = document.getElementById('photo-input');
+    const entriesContainer = document.getElementById('entries');
+
+    // Sanitize text to prevent injection (basic)
+    function sanitizeText(text) {
+      const div = document.createElement('div');
+      div.textContent = text;
+      return div.innerHTML;
+    }
+
+    // Validate image type strictly
+    function validateImage(file) {
+      const acceptedTypes = ['image/jpeg', 'image/png', 'image/gif', 'image/webp'];
+      return file && acceptedTypes.includes(file.type);
+    }
+
+    function saveEntry() {
+      const text = textEntry.value.trim();
+
+      // If no text and no photo, do nothing
+      if (!text && !photoInput.files[0]) return;
+
+      // Validate photo file type (security)
+      if (photoInput.files[0] && !validateImage(photoInput.files[0])) {
+        alert("Format d'image non supporté. Seuls JPEG, PNG, GIF et WEBP sont acceptés.");
+        photoInput.value = "";
+        return;
+      }
+
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        const entry = {
+          id: Date.now(),
+          text: sanitizeText(text), // sanitize text for security
+          photo: reader.result || null,
+          timestamp: new Date().toLocaleString('fr-FR', {
+            weekday: 'long',
+            year: 'numeric',
+            month: 'long',
+            day: 'numeric',
+            hour: '2-digit',
+            minute: '2-digit'
+          })
+        };
+
+        const saved = JSON.parse(localStorage.getItem('tace_entries')) || [];
+        saved.unshift(entry);
+        localStorage.setItem('tace_entries', JSON.stringify(saved));
+
+        textEntry.value = "";
+        photoInput.value = "";
+        renderEntries();
+      };
+
+      if (photoInput.files[0]) {
+        reader.readAsDataURL(photoInput.files[0]);
+      } else {
+        reader.onloadend();
+      }
+    }
+
+    function deleteEntry(id) {
+      const saved = JSON.parse(localStorage.getItem('tace_entries')) || [];
+      const updated = saved.filter(entry => entry.id !== id);
+      localStorage.setItem('tace_entries', JSON.stringify(updated));
+      renderEntries();
+    }
+
+    function downloadText(text, filename) {
+      const blob = new Blob([text], { type: 'text/plain' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = filename;
+      a.click();
+      URL.revokeObjectURL(url);
+    }
+
+    function renderEntries() {
+      const saved = JSON.parse(localStorage.getItem('tace_entries')) || [];
+      entriesContainer.innerHTML = '';
+
+      saved.forEach(entry => {
+        const div = document.createElement('div');
+        div.className = 'entry';
+
+        if (entry.photo) {
+          const img = document.createElement('img');
+          img.src = entry.photo;
+          img.alt = "Photo associée au souvenir";
+          div.appendChild(img);
+        }
+
+        const p = document.createElement('p');
+        // Affichage texte sécurisé (sanitizeText déjà utilisé au stockage)
+        p.innerHTML = entry.text.replace(/\n/g, "<br>"); // garder retours à la ligne
+        div.appendChild(p);
+
+        const time = document.createElement('p');
+        time.className = 'timestamp';
+        time.textContent = entry.timestamp;
+        div.appendChild(time);
+
+        const delBtn = document.createElement('button');
+        delBtn.className = 'delete-button';
+        delBtn.type = 'button';
+        delBtn.textContent = 'Supprimer';
+        delBtn.onclick = () => {
+          if (confirm('Voulez-vous vraiment supprimer ce souvenir ?')) {
+            deleteEntry(entry.id);
+          }
+        };
+        div.appendChild(delBtn);
+
+        const downloadBtn = document.createElement('button');
+        downloadBtn.className = 'download-button';
+        downloadBtn.type = 'button';
+        downloadBtn.textContent = 'Télécharger texte';
+        downloadBtn.onclick = () => {
+          downloadText(entry.text, `souvenir_${entry.id}.txt`);
+        };
+        div.appendChild(downloadBtn);
+
+        entriesContainer.appendChild(div);
+      });
+    }
+
+    // Export all entries as a single PDF (text + images)
+    async function exportAllToPDF() {
+      const { jsPDF } = window.jspdf;
+      const saved = JSON.parse(localStorage.getItem('tace_entries')) || [];
+
+      if (saved.length === 0) {
+        alert("Aucun souvenir à exporter.");
+        return;
+      }
+
+      const pdf = new jsPDF({
+        unit: 'pt',
+        format: 'a4'
+      });
+
+      const pageWidth = pdf.internal.pageSize.getWidth();
+      const margin = 40;
+      const maxImageWidth = pageWidth - 2 * margin;
+
+      let y = margin;
+
+      for (let i = 0; i < saved.length; i++) {
+        const entry = saved[i];
+
+        // Ajouter texte
+        const lines = pdf.splitTextToSize(entry.text.replace(/<br>/g, '\n'), pageWidth - 2 * margin);
+        pdf.setFontSize(12);
+        pdf.text(lines, margin, y);
+        y += lines.length * 14 + 10;
+
+        // Ajouter photo si présente
+        if (entry.photo) {
+          try {
+            const imgProps = pdf.getImageProperties(entry.photo);
+            let imgWidth = maxImageWidth;
+            let imgHeight = (imgProps.height * imgWidth) / imgProps.width;
+
+            // Si image trop grande pour la page, créer nouvelle page
+            if (y + imgHeight > pdf.internal.pageSize.getHeight() - margin) {
+              pdf.addPage();
+              y = margin;
+            }
+
+            pdf.addImage(entry.photo, 'JPEG', margin, y, imgWidth, imgHeight);
+            y += imgHeight + 20;
+          } catch {
+            // ignore erreurs image
+          }
+        }
+
+        // Ajouter date
+        pdf.setFontSize(10);
+        pdf.setTextColor(150);
+        if (y > pdf.internal.pageSize.getHeight() - 50) {
+          pdf.addPage();
+          y = margin;
+        }
+        pdf.text(`Souvenir du ${entry.timestamp}`, margin, y);
+        y += 30;
+
+        // Nouvelle page si pas assez d’espace pour la prochaine entrée
+        if (i < saved.length - 1 && y > pdf.internal.pageSize.getHeight() - 100) {
+          pdf.addPage();
+          y = margin;
+        }
+      }
+
+      pdf.save('Mes_souvenirs.pdf');
+    }
+
+    window.addEventListener('DOMContentLoaded', () => {
+      renderEntries();
+    });
+  </script>
+  <script type="text/javascript">
+    
+
+
+</script>
+<script>
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', function() {
+      navigator.serviceWorker.register('/service-worker.js')
+        .then(function(registration) {
+          console.log('Service Worker enregistré avec succès:', registration.scope);
+        })
+        .catch(function(error) {
+          console.log('Erreur d’enregistrement du Service Worker:', error);
+        });
+    });
+  }
+</script>
+
+
+  
+</body>
+</html>
+
+
